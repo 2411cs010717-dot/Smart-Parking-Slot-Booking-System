@@ -1,0 +1,83 @@
+{% extends "base.html" %}{% block title %}Admin · SmartPark{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">ADMINISTRATION</p>
+        <h1>Admin dashboard</h1>
+        <p class="muted">Manage slot status and review recent reservations.</p>
+    </div><span class="status-chip">● Admin access</span>
+</div>
+<div class="stats-grid">
+    <div class="stat-card">
+        <p>Total slots</p><strong>{{ stats.total }}</strong>
+    </div>
+    <div class="stat-card">
+        <p>Available</p><strong>{{ stats.vacant }}</strong>
+    </div>
+    <div class="stat-card">
+        <p>Occupied</p><strong>{{ stats.occupied }}</strong>
+    </div>
+    <div class="stat-card">
+        <p>Confirmed bookings</p><strong>{{ stats.bookings }}</strong>
+    </div>
+</div>
+<section class="panel table-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>Manage parking slots</h2>
+            <p class="muted">Set the current physical status of each slot.</p>
+        </div>
+    </div>{% if slots %}<div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>Slot</th>
+                    <th>Vehicle type</th>
+                    <th>Current status</th>
+                    <th>Update status</th>
+                </tr>
+            </thead>
+            <tbody>{% for slot in slots %}<tr>
+                    <td>{{ slot.slot_number }}</td>
+                    <td>{{ slot.vehicle_type }}</td>
+                    <td>{{ slot.status }}</td>
+                    <td>
+                        <form class="inline-form" method="post" action="{{ url_for('update_slot', slot_id=slot.id) }}">
+                            <select name="status">
+                                <option {% if slot.status=='Available' %}selected{% endif %}>Available</option>
+                                <option {% if slot.status=='Occupied' %}selected{% endif %}>Occupied</option>
+                            </select><button class="btn small primary">Save</button>
+                        </form>
+                    </td>
+                </tr>{% endfor %}</tbody>
+        </table>
+    </div>{% else %}<p class="muted">No slots loaded. Run the SQL setup script.</p>{% endif %}
+</section>
+<section class="panel table-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>Recent bookings</h2>
+            <p class="muted">Latest reservations across users.</p>
+        </div><a href="{{ url_for('my_bookings') }}">View all →</a>
+    </div>{% if bookings %}<div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Slot</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>{% for b in bookings %}<tr>
+                    <td>{{ b.username }}</td>
+                    <td>{{ b.slot_name }}</td>
+                    <td>{{ b.booking_date }}</td>
+                    <td>{{ b.start_time }}–{{ b.end_time }}</td>
+                    <td>{{ b.status }}</td>
+                </tr>{% endfor %}</tbody>
+        </table>
+    </div>{% else %}<p class="muted">No bookings to show yet.</p>{% endif %}
+</section>
+{% endblock %}

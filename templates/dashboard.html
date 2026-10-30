@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}Dashboard · SmartPark{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">OVERVIEW</p><h1>Hello, {{ session.get('username') }} 👋</h1><p class="muted">Here's the current snapshot of your parking system.</p></div><a class="btn primary" href="{{ url_for('booking') }}">+ Book a slot</a></div>
+<div class="stats-grid">
+  <div class="stat-card"><span class="stat-icon blue">▦</span><p>Total slots</p><strong>{{ stats.total }}</strong><small>Configured parking spaces</small></div>
+  <div class="stat-card"><span class="stat-icon green">✓</span><p>Available slots</p><strong>{{ stats.vacant }}</strong><small>Ready to reserve</small></div>
+  <div class="stat-card"><span class="stat-icon orange">▣</span><p>Occupied slots</p><strong>{{ stats.occupied }}</strong><small>Currently marked occupied</small></div>
+  <div class="stat-card"><span class="stat-icon purple">▤</span><p>Confirmed bookings</p><strong>{{ stats.bookings }}</strong><small>Reservations in the database</small></div>
+</div>
+<div class="content-grid"><section class="panel"><div class="panel-heading"><div><h2>Quick actions</h2><p class="muted">What would you like to do?</p></div></div><div class="action-list">
+<a class="action-item" href="{{ url_for('detection') }}"><span class="action-icon purple">✦</span><span><strong>AI occupancy detection</strong><small>Analyze an image with the CNN model</small></span><b>→</b></a>
+<a class="action-item" href="{{ url_for('booking') }}"><span class="action-icon green">▦</span><span><strong>Reserve parking</strong><small>Choose a slot, date and time</small></span><b>→</b></a>
+<a class="action-item" href="{{ url_for('my_bookings') }}"><span class="action-icon blue">▤</span><span><strong>View my bookings</strong><small>Review or cancel reservations</small></span><b>→</b></a>
+</div></section><section class="panel dark-panel"><p class="eyebrow">SMARTPARK AI</p><h2>Parking, with a little intelligence.</h2><p>Upload a parking-space image and let the trained CNN classify it as occupied or vacant.</p><a class="btn light" href="{{ url_for('detection') }}">Try AI detection →</a><div class="parking-illustration">▱ ▱ ▱<br>▰ ▱ ▰</div></section></div>
+{% endblock %}

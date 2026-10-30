@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}AI Detection · SmartPark{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">COMPUTER VISION</p>
+        <h1>AI Parking Detection</h1>
+        <p class="muted">
+            Upload one image of a parking space. The CNN predicts occupied or vacant.
+        </p>
+    </div>
+    <span class="status-chip">● CNN powered</span>
+</div>
+
+<div class="content-grid detection-grid">
+    <section class="panel">
+        <h2>Upload an image</h2>
+        <p class="muted">
+            Upload a cropped image showing one parking space.
+            JPG, PNG, WEBP · max 8 MB.
+        </p>
+
+        <!-- Both fields must be inside the same form -->
+        <form method="post" enctype="multipart/form-data" class="upload-form">
+
+            <label class="field-label" for="slotSelect">
+                Select the parking slot shown in the image
+            </label>
+
+            <select name="slot_id" id="slotSelect" required>
+                <option value="">Choose a parking slot</option>
+                {% for slot in slots %}
+                <option value="{{ slot.slot_id }}" {% if request.form.get('slot_id')==slot.slot_id|string %} selected {%
+                    endif %}>
+                    {{ slot.slot_name }} — {{ slot.status }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <label class="dropzone" for="imageInput">
+                <span class="upload-symbol">↑</span>
+                <strong>Choose a parking image</strong>
+                <small id="fileName">Click to browse files</small>
+                <input id="imageInput" type="file" name="image" accept=".png,.jpg,.jpeg,.webp" required>
+            </label>
+
+            <button class="btn primary full" type="submit">
+                Analyze with CNN →
+            </button>
+        </form>
+
+        {% if model_message %}
+        <div class="flash warning model-warning">
+            {{ model_message }}
+        </div>
+        {% endif %}
+
+        {% if result %}
+        <div class="prediction-result">
+            <span class="prediction-icon">
+                {{ '●' if result.label == 'Occupied' else '✓' }}
+            </span>
+            <div>
+                <small>MODEL PREDICTION</small>
+                <h2>{{ result.label }}</h2>
+                <p>{{ result.confidence }}% confidence</p>
+            </div>
+        </div>
+        {% endif %}
+    </section>
+
+    <section class="panel">
+        <h2>How it works</h2>
+        <div class="step-list">
+            <div>
+                <span>1</span>
+                <p><strong>Upload</strong>
+                    <small>Choose a parking-space image.</small>
+                </p>
+            </div>
+            <div>
+                <span>2</span>
+                <p><strong>Preprocess</strong>
+                    <small>The image is resized to 128 × 128 pixels.</small>
+                </p>
+            </div>
+            <div>
+                <span>3</span>
+                <p><strong>Predict</strong>
+                    <small>The CNN predicts occupied or vacant.</small>
+                </p>
+            </div>
+        </div>
+
+        {% if uploaded_image %}
+        <div class="preview-box">
+            <p class="muted">Uploaded image</p>
+            <img src="{{ url_for('static', filename='uploads/' + uploaded_image) }}" alt="Uploaded parking space image">
+        </div>
+        {% endif %}
+
+        <div class="hint">
+            Model not trained yet? Run the dataset generation and training
+            commands from README.md.
+        </div>
+    </section>
+</div>
+{% endblock %}

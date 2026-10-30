@@ -1,0 +1,37 @@
+{% extends "base.html" %}{% block title %}Book a Slot · SmartPark{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">RESERVATIONS</p>
+        <h1>Book a parking slot</h1>
+        <p class="muted">Select a slot and time range. Conflicting confirmed bookings are rejected.</p>
+    </div>
+</div>
+<div class="content-grid booking-grid">
+    <section class="panel">
+        <h2>Parking layout</h2>
+        <p class="muted">Green slots are currently available; orange slots are marked occupied.</p>
+        <div class="slot-grid">{% for slot in slots %}<div
+                class="slot-tile {{ 'occupied' if slot.status == 'Occupied' else 'available' }}"><strong>{{
+                    slot.slot_name }}</strong><small>{{ slot.vehicle_type }}</small><span>{{ slot.status }}</span></div>
+            {% endfor %}</div>
+    </section>
+    <section class="panel">
+        <h2>Reservation details</h2>
+        <form method="post" class="stack-form"><label class="field-label">Parking slot</label><select name="slot_id"
+                required>{% for slot in slots %}<option value="{{ slot.slot_id }}" {% if slot.status=='Occupied'
+                    %}disabled{% endif %}>{{ slot.slot_name }} — {{ slot.vehicle_type }} ({{ slot.status }})</option>{%
+                endfor %}</select><label class="field-label">Vehicle type</label><select name="vehicle_type">
+                <option>Four-wheeler</option>
+                <option>Two-wheeler</option>
+            </select><label class="field-label">Booking date</label><input type="date" name="booking_date"
+                id="bookingDate" required>
+            <div class="form-row">
+                <div><label class="field-label">Start time</label><input type="time" name="start_time" required></div>
+                <div><label class="field-label">End time</label><input type="time" name="end_time" required></div>
+            </div><button class="btn primary full" type="submit">Confirm booking →</button>
+        </form>
+        <p class="muted tiny">Demo note: payment is not included. Booking data is stored in MySQL.</p>
+    </section>
+</div>
+{% endblock %}

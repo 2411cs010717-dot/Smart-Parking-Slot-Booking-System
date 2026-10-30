@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% block title %}Login · SmartPark{% endblock %}
+{% block content %}
+<section class="login-wrap">
+  <div class="login-art">
+    <div class="circle">P</div>
+    <p class="eyebrow">SMART PARKING, SIMPLIFIED</p>
+    <h1>Find your space.<br>Skip the search.</h1>
+    <p>Check parking availability, reserve a slot, and explore AI-powered occupancy detection.</p>
+    <div class="mini-stats"><span>20 demo slots</span><span>CNN image analysis</span></div>
+  </div>
+  <div class="login-card">
+    <p class="eyebrow">WELCOME</p>
+    <h2>Sign in to SmartPark</h2>
+    <p class="muted">Choose your login type to continue.</p>
+    <form method="post" id="loginForm">
+      <div class="role-switch"><label><input type="radio" name="role" value="user" checked> User</label><label><input
+            type="radio" name="role" value="admin"> Admin</label></div>
+      <label class="field-label" for="username">Username</label><input id="username" name="username"
+        autocomplete="username" placeholder="Enter username" required>
+      <label class="field-label" for="password">Password</label><input id="password" name="password" type="password"
+        autocomplete="current-password" placeholder="Enter password" required>
+      <button class="btn primary full" type="submit">Login <span>→</span></button>
+    </form>
+    <div class="hint"><strong>Demo admin credentials</strong><br>Username: <code>admin</code> · Password:
+      <code>Admin@123</code><br><small>User login accepts any non-empty username and password.</small></div>
+  </div>
+</section>
+{% endblock %}

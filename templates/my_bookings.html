@@ -1,0 +1,44 @@
+{% extends "base.html" %}{% block title %}My Bookings · SmartPark{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">RESERVATIONS</p>
+        <h1>{% if session.get('role') == 'admin' %}All bookings{% else %}My bookings{% endif %}</h1>
+        <p class="muted">Review the status and details of reservations.</p>
+    </div><a class="btn primary" href="{{ url_for('booking') }}">+ New booking</a>
+</div>
+<section class="panel table-panel">{% if bookings %}<div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>Booking</th>
+                    <th>User</th>
+                    <th>Slot</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Vehicle</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>{% for b in bookings %}<tr>
+                    <td>#{{ b.booking_id }}</td>
+                    <td>{{ b.username }}</td>
+                    <td>{{ b.slot_name }}</td>
+                    <td>{{ b.booking_date }}</td>
+                    <td>{{ b.start_time }}–{{ b.end_time }}</td>
+                    <td>{{ b.vehicle_type }}</td>
+                    <td><span class="badge {{ 'green-badge' if b.status == 'Confirmed' else 'gray-badge' }}">{{ b.status
+                            }}</span></td>
+                    <td>{% if b.status == 'Confirmed' %}<form method="post"
+                            action="{{ url_for('cancel_booking', booking_id=b.booking_id) }}"
+                            onsubmit="return confirm('Cancel this booking?')"><button class="text-button danger-text"
+                                type="submit">Cancel</button></form>{% else %}—{% endif %}</td>
+                </tr>{% endfor %}</tbody>
+        </table>
+    </div>{% else %}<div class="empty-state"><span>▤</span>
+        <h3>No bookings yet</h3>
+        <p>Once you reserve a slot, it will appear here.</p><a class="btn primary" href="{{ url_for('booking') }}">Book
+            your first slot</a>
+    </div>{% endif %}</section>
+{% endblock %}
